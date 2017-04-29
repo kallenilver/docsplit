@@ -67,7 +67,7 @@ module Docsplit
           escaped_tiff = ESCAPE[tiff]
           file = "#{base_path}_#{page}"
           run "MAGICK_TMPDIR=#{tempdir} OMP_NUM_THREADS=2 gm convert -despeckle +adjoin #{MEMORY_ARGS} #{OCR_FLAGS} #{escaped_pdf}[#{page - 1}] #{escaped_tiff} 2>&1"
-          run "tesseract #{escaped_tiff} #{ESCAPE[file]} -l #{@language} #{psm} 2>&1"
+          run "tesseract #{escaped_tiff} #{ESCAPE[file]} -l #{@language} #{psm} -c preserve_interword_spaces=1 2>&1"
           clean_text(file + '.txt') if @clean_ocr
           FileUtils.remove_entry_secure tiff
         end
@@ -76,7 +76,7 @@ module Docsplit
         escaped_tiff = ESCAPE[tiff]
         run "MAGICK_TMPDIR=#{tempdir} OMP_NUM_THREADS=2 gm convert -despeckle #{MEMORY_ARGS} #{OCR_FLAGS} #{escaped_pdf} #{escaped_tiff} 2>&1"
         #if the user says don't do orientation detection or the plugin is not installed, set psm to 0
-        run "tesseract #{escaped_tiff} #{base_path} -l #{@language} #{psm} 2>&1"
+        run "tesseract #{escaped_tiff} #{base_path} -l #{@language} #{psm} -c preserve_interword_spaces=1 2>&1"
         clean_text(base_path + '.txt') if @clean_ocr
       end
     ensure
